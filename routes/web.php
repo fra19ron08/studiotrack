@@ -9,6 +9,32 @@ use App\Http\Controllers\ClientStudioController;
 use App\Http\Controllers\ClientBookingController;
 
 /**
+ * 🔧 WEBHOOK GIT DEPLOY - SEMPRE IN CIMA (no auth!)
+ */
+Route::post('/webhook/github', function () {
+    try {
+        // Git pull
+        exec('cd /home/deploy/current && git pull origin main 2>&1', $output);
+        
+        // Build assets
+        exec('cd /home/deploy/current && npm ci 2>&1', $npm1);
+        exec('cd /home/deploy/current && npm run build 2>&1', $npm2);
+        
+        // Laravel
+        exec('cd /home/deploy/current && php artisan config:cache 2>&1', $config);
+        exec('cd /home/deploy/current && php artisan view:cache 2>&1', $view);
+        exec('cd /home/deploy/current && php artisan migrate --force 2>&1', $migrate);
+        
+        // Restart services
+        exec('sudo systemctl restart php8.3-fpm nginx 2>&1', $restart);
+        
+        return response('Deploy OK! ' . implode("\n", array_merge($output, $npm2, [$migrate[0] ?? ''])));
+    } catch (Exception $e) {
+        return response('Deploy FAILED: ' . $e->getMessage(), 500);
+    }
+});
+
+/**
  * HOME: prima pagina = barra ricerca (pubblica)
  */
 Route::get('/', [ClientStudioController::class, 'index'])->name('home');
@@ -51,7 +77,6 @@ Route::middleware(['auth', 'verified', 'role:cliente'])
     ->prefix('client')
     ->name('client.')
     ->group(function () {
-
         Route::get('/studios', [ClientStudioController::class, 'index'])->name('studios.index');
         Route::get('/studios/results', [ClientStudioController::class, 'results'])->name('studios.results');
 
