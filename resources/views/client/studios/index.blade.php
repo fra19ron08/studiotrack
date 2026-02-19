@@ -107,4 +107,5 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => map.invalidateSize(), 300);
 });
 </script>
+<!-- ROSA TEST 19/02 20:52 -->
 @endsection
