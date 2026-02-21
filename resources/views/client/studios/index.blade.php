@@ -5,7 +5,7 @@
   {{-- Header --}}
   <div class="flex items-start justify-between gap-4">
     <div>
-      <h1 class="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">Trova un fottutissimo studio</h1>
+      <h1 class="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">Trova uno studio</h1>
       <p class="mt-1 text-slate-600 dark:text-slate-300">Cerca per zona, data e budget. Prenoti in pochi click.</p>
     </div>
 
